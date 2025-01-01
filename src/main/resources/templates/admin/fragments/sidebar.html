@@ -1,0 +1,11 @@
+<div th:if="${session.user != null}" class="sidebar">
+    <ul class="menu" style="text-align: left;">
+        <li><a th:href="@{/admin/foods}">Quản lý sản phẩm</a></li>
+        <li><a th:href="@{/admin/orders}">Quản lý đơn hàng</a></li>
+        <li><a th:href="@{/admin/invoice}">Thống kê</a>
+        <li><a th:href="@{/admin/statistics}">Báo cáo doanh thu</a></li>
+        <li><a th:href="@{/admin/customers}">Quản lý khách hàng</a></li>
+        <li><a th:href="@{/admin/account}">Quản lý tài khoản</a></li>
+        <li><a th:href="@{/user/logout}">Đăng xuất</a></li>
+    </ul>
+</div>

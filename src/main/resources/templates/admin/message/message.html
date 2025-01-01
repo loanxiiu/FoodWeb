@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Gửi tin nhắn</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="chat-container">
+    <div id="messages">
+        <!-- Tin nhắn sẽ được hiển thị ở đây -->
+    </div>
+    <form id="message-form">
+        <textarea id="message-input" placeholder="Nhập tin nhắn..."></textarea>
+        <button type="submit">Gửi</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var userId = 1;  // ID của người dùng hiện tại (có thể lấy từ session hoặc token)
+        var receiverId = 2;  // ID của người nhận tin nhắn
+
+        // Hàm gửi tin nhắn
+        $('#message-form').submit(function(event) {
+            event.preventDefault(); // Ngăn chặn reload trang khi submit form
+
+            var message = $('#message-input').val();
+            if (message.trim() === '') return;
+
+            $.ajax({
+                url: '/send-message',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    senderId: userId,
+                    receiverId: receiverId,
+                    message: message
+                }),
+                success: function(response) {
+                    $('#messages').append('<p><strong>Bạn:</strong> ' + message + '</p>');
+                    $('#message-input').val(''); // Xóa nội dung input sau khi gửi
+                },
+                error: function(error) {
+                    alert('Có lỗi khi gửi tin nhắn!');
+                }
+            });
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    $(document).ready(function() {
+        var userId = 1;  // ID của người dùng hiện tại
+        var receiverId = 2;  // ID của người nhận tin nhắn
+
+        // Lấy lịch sử tin nhắn
+        $.ajax({
+            url: '/send-message/history?senderId=' + userId + '&receiverId=' + receiverId,
+            type: 'GET',
+            success: function(response) {
+                response.forEach(function(msg) {
+                    $('#messages').append('<p><strong>' + (msg.senderId == userId ? 'Bạn' : 'Người nhận') + ':</strong> ' + msg.message + '</p>');
+                });
+            },
+            error: function(error) {
+                alert('Có lỗi khi tải lịch sử tin nhắn!');
+            }
+        });
+
+        // Gửi tin nhắn khi form được submit
+        $('#message-form').submit(function(event) {
+            event.preventDefault();
+
+            var message = $('#message-input').val();
+            if (message.trim() === '') return;
+
+            $.ajax({
+                url: '/send-message',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    senderId: userId,
+                    receiverId: receiverId,
+                    message: message
+                }),
+                success: function(response) {
+                    $('#messages').append('<p><strong>Bạn:</strong> ' + message + '</p>');
+                    $('#message-input').val('');
+                },
+                error: function(error) {
+                    alert('Có lỗi khi gửi tin nhắn!');
+                }
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

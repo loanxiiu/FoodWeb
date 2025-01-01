@@ -1,0 +1,21 @@
+<header style="display: flex; justify-content: space-between; " class="header">
+    <a th:href="@{/}" style="text-decoration: none">
+        <div class="logo">
+            <img th:src="@{/assets/images/logo.png}" alt="Logo" class="avatar">
+            <span> 2022 FOOD </span>
+        </div>
+    </a>
+
+    <div>
+        <nav th:if="${session.user == null}" class="menu">
+            <a th:href="@{/user/dangnhap}">Đăng nhập</a>
+            <a href="#">Hỗ trợ</a>
+            <a href="#">Tiếng Việt <span>▼</span></a>
+        </nav>
+        <div class="logo" th:if="${session.user != null}">
+            <span> Xin chào </span>
+            <span th:text="${session.user.name}"> </span>
+            <img th:src="@{${session.user.image}}" alt="Logo" class="avatar">
+        </div>
+    </div>
+</header>

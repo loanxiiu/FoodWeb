@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ff9f32;
+            border-bottom: 1px solid #ddbdbd;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .menu a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 14px;
+        }
+
+        .menu a.active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            gap: 20px;
+            max-width: 400px;
+            width: 90%;
+            height: 90vh; /* Chiều cao toàn màn hình */
+            margin: 0 auto;
+        }
+
+        .left-section,
+        .right-section {
+            flex: 1;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .left-section {
+            flex: 1; /* Vẫn chiếm nhiều không gian hơn so với .right-section */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            height: 60vh;
+
+        }
+
+        .left-section .main-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .left-section p {
+            font-size: 16px;
+            color: #d26767;
+        }
+
+        /* Right Section */
+        .right-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ec6527;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input[type="text"],
+        form input[type="password"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-options a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .form-options a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-facebook {
+            background-color: #3b5998;
+            color: #fff;
+        }
+
+        .btn-google {
+            background-color: #db4437;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">
+    <a th:href="@{/}" style="text-decoration: none">
+        <div class="logo">
+            <img th:src="@{/assets/images/logo.png}" alt="User Icon">
+            <span>2022 FOOD</span>
+        </div>
+        <div class="menu">
+            <a th:href="@{/user/dangnhap}" class="active">Đăng nhập</a>
+        </div>
+    </a>
+</div>
+
+<div class="container">
+    <div class="left-section">
+        <h2>ĐĂNG KÍ
+            <style></style>
+        </h2>
+        <form th:action="@{/user/create}" method="post">
+            <input type="text" name="email" placeholder="Tên đăng nhập / SDT / Email">
+            <input type="password" name="password" placeholder="Nhập mật khẩu">
+            <button type="submit" class="btn-primary">Đăng ký</button>
+
+            <div class="divider">Hoặc đăng ký bằng các hình thức sau</div>
+            <div class="social-buttons">
+                <button class="btn-facebook">Facebook</button>
+                <button class="btn-google">Google</button>
+            </div>
+            <div class="divider">
+                Điều khoản dịch vụ & Chính sách bảo mật<br>
+                Bạn đã có tài khoản? <a th:href="@{/user/dangnhap}">Đăng nhập</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

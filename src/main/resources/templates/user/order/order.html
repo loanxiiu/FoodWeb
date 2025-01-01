@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:insert="/user/fragments/head :: head(~{::link},~{::title})">
+    <title>Đơn hàng</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+</head>
+<style>
+    /* Table */
+    .category-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .category-table th,
+    .category-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .category-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    .category-table tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .category-table tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<body style="margin: 0 400px 0 400px;">
+
+<!-- Header -->
+<header th:replace="/user/fragments/header :: header"></header><!--<span id="cart-count">0</span>-->
+
+<div class="container">
+
+    <div th:if="${session.user != null}" class="sidebar">
+        <ul class="menu" style="text-align: left;">
+            <li><a th:href="@{/cart}">Giỏ hàng</a></li>
+            <li><a th:href="@{/order}">Đơn hàng</a></li>
+            <li><a th:href="@{/user/account}">Tài khoản</a>
+            <li><a th:href="@{/user/logout}">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <!-- Nội dung chính -->
+    <main class="main-content">
+
+        <section class="content">
+            <div class="header">
+                <h1>Đơn hàng</h1>
+                <div style="display: flex" class="search-bar">
+                    <form th:action="@{/user/order/search}" method="get">
+                        <input type="text" name="search" placeholder="Nhập mã đơn"
+                               th:value="${searchTerm}" class="search-box">
+                        <button type="submit" class="search-btn">🔍</button>
+                    </form>
+                </div>
+            </div>
+            <table class="category-table">
+                <thead>
+                <tr>
+                    <th>Mã đơn hàng</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Đơn giá</th>
+                    <th>Mã nhân viên giao hàng</th>
+                    <th>Ngày giao hàng</th>
+                    <th>Trạng thái</th>
+                    <th>Tác vụ</th>
+                    <th>Xác nhận đơn hàng</th>
+                    <th>Hủy đơn</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${searchTerm==null && order.status != null}" th:each="order: ${listOrderResponse}">
+                    <td th:text="${order.id}" class="customerId">
+                        <input type="hidden" name="id" th:value="${order.id}">
+                    </td>
+                    <td th:text="${order.orderDate}" class="orderDate">
+                        <input type="hidden" name="orderDate" th:value="${order.orderDate}">
+                    </td>
+                    <td th:text="${order.totalPrice}" class="totalPrice">
+                        <input type="hidden" name="totalPrice" th:value="${order.totalPrice}">
+                    </td>
+                    <td th:text="${order.deliveryPersonId}" class="deliveryPersonId">
+                        <input type="hidden" name="deliveryPersonId" th:value="${order.deliveryPersonId}">
+                    </td>
+                    <td th:text="${order.deliveryDate}" class="deliveryDate">
+                        <input type="hidden" name="deliveryDate" th:value="${order.deliveryDate}">
+                    </td>
+                    <td th:text="${order.status}" class="status">
+                        <input type="hidden" name="status" th:value="${order.status}">
+                    </td>
+                    <td><a th:href="@{/user/orderDetail/{id}(id=${order.id})}">Xem chi tiết</a></td>
+                    <td>
+                        <button type="button" class="btn-save" th:attr="data-id=${order.id}" th:style="${order.status.equals('Giao hàng thành công') ? 'background-color: gray' : 'background-color: #ff9f32'}">Xác nhận đơn hàng</button>
+                    </td>
+                    <td>
+                        <form th:action="@{/user/orders/delete}" method="get"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                            <input type="hidden" name="id" th:value="${order.id}"/>
+                            <input type="hidden" name="href" th:value="${'/user/orders'}"/>
+                            <button type="submit">Hủy đơn</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${searchTerm!=null && orderResponse.status != null && orderResponse!=null}">
+                    <!--                    <td><input type="checkbox"></td>-->
+                    <td th:text="${orderResponse.id}" class="customerId">
+                        <input type="hidden" name="id" th:value="${orderResponse.id}">
+                    </td>
+                    <td th:text="${orderResponse.orderDate}" class="orderDate">
+                        <input type="hidden" name="orderDate" th:value="${orderResponse.orderDate}">
+                    </td>
+                    <td th:text="${orderResponse.totalPrice}" class="totalPrice">
+                        <input type="hidden" name="totalPrice" th:value="${orderResponse.totalPrice}">
+                    </td>
+                    <td th:text="${orderResponse.deliveryPersonId}" class="deliveryPersonId">
+                        <input type="hidden" name="deliveryPersonId" th:value="${orderResponse.deliveryPersonId}">
+                    </td>
+                    <td th:text="${orderResponse.deliveryDate}" class="deliveryDate">
+                        <input type="hidden" name="deliveryDate" th:value="${orderResponse.deliveryDate}">
+                    </td>
+                    <td th:text="${orderResponse.status}" class="status">
+                        <input type="hidden" name="status" th:value="${orderResponse.status}">
+                    </td>
+                    <td><a th:href="@{/user/orderDetail/{id}(id=${orderResponse.id})}">Xem chi tiết</a></td>
+                    <td>
+                        <button type="button" class="btn-save" th:attr="data-id=${orderResponse.id}" th:style="${orderResponse.status.equals('Giao hàng thành công') ? 'background-color: gray' : 'background-color: #ff9f32'}">Xác nhận đơn hàng</button>
+                    </td>
+                    <td>
+                        <form th:action="@{/user/orders/delete}" method="get"
+                              onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                            <input type="hidden" name="id" th:value="${orderResponse.id}"/>
+                            <button type="submit">Hủy đơn</button>
+                        </form>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).on('click', '.btn-save', function () {
+        var row = $(this).closest('tr'); // Get the current row
+        var id = $(this).data('id'); // Get the order ID
+        var customerId = row.find('.customerId').text(); // Get the customer ID (use .text() to extract the value)
+        var orderDate = row.find('.orderDate').text(); // Get the order date
+        var totalPrice = row.find('.totalPrice').text(); // Get the total price
+        var deliveryPersonId = row.find('.deliveryPersonId').text(); // Get the delivery person ID
+        var deliveryDate = row.find('.deliveryDate').text(); // Get the delivery date
+        var status = row.find('.status').val(); // Get the selected status from the dropdown
+
+        // Prepare the data payload
+        var payload = {
+            status: 'Giao hàng thành công',
+            customerId: customerId,
+            orderDate: orderDate,
+            totalPrice: totalPrice,
+            deliveryPersonId: deliveryPersonId,
+            deliveryDate: deliveryDate
+        };
+
+        // Send the data via AJAX
+        $.ajax({
+            url: '/food_web/user/orders/update/' + id, // Correct the URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload), // Send the properly formatted payload
+            success: function (response) {
+                // Update the status dropdown with the new status
+                row.find('.status').text(response.status);
+                row.find('.status input[name="status"]').val(response.status);
+                row.find('.btn-save').prop('disabled', true).css('background-color', 'gray');
+            },
+            error: function (error) {
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                console.log(this.url)
+            }
+        });
+    });
+</script>
+</body>
+</html>

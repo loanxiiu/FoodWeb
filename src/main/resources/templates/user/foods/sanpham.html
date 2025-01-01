@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết món ăn</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <style>
+        /* Đặt lại mặc định */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            display: flex; /* Kích hoạt Flexbox */
+            width: 100%; /* Đặt chiều rộng container */
+            margin: 0; /* Xóa margin */
+            padding: 0;
+            background: #fff;
+            height: 100vh; /* Chiều cao toàn màn hình */
+        }
+
+        /* Sidebar nằm bên trái */
+        .sidebar {
+            width: 250px; /* Chiều rộng sidebar cố định */
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-sizing: border-box;
+            border-right: 1px solid #ccc;
+            text-align: left;
+        }
+
+        main {
+            flex: 1; /* Phần còn lại của container */
+            padding: 20px;
+            overflow-y: auto; /* Cho phép cuộn khi nội dung dài */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ff9f32;
+            border-bottom: 1px solid #ccc;
+            height: 90px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img.avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .menu {
+            width: 100%;
+        }
+
+        .menu a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #007BFF;
+            font-size: 14px;
+        }
+
+        .menu a:hover {
+            text-decoration: underline;
+        }
+        nav {
+            display: block;
+            unicode-bidi: isolate;
+            text-align: right;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        header nav ul li {
+            margin-left: 15px;
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Sản phẩm */
+        .product-detail .back-btn {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .product-image img {
+            width: 250px;
+            height: 250px;
+        }
+
+        .product-desc {
+            flex: 1;
+        }
+
+        .product-desc h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .product-desc p {
+            margin-bottom: 10px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .quantity-control button {
+            background: #ddd;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .quantity-control input {
+            width: 50px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons .add-to-cart,
+        .action-buttons .buy-now {
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-to-cart {
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+        }
+        .buy-now {
+            background-color: #ff4d4f;
+            color: white;
+            border-radius: 4px;
+        }
+
+        /* Bảng chi tiết */
+        .product-details table {
+            width: 100%;
+            height: 80%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+
+        .product-details td {
+            border: 1px solid #ddd;
+            padding: 50px;
+            text-align: left;
+        }
+
+        .product-details th {
+            background-color: #f0f0f0;
+            padding: 2%;
+
+
+        }
+
+
+    </style>
+
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; " class="header">
+    <a th:href="@{/}" style="text-decoration: none">
+        <div class="logo">
+            <img th:src="@{/assets/images/logo.png}" alt="Logo" class="avatar">
+            <span> 2022 FOOD </span>
+        </div>
+    </a>
+    <div>
+        <a th:href="@{/user/dangnhap}" th:if="${session.user == null}">Đăng nhập</a>
+        <div class="logo" th:if="${session.user != null}">
+            <span> Xin chào </span>
+            <span th:text="${session.user.name}"> </span>
+            <img th:src="@{${session.user.getImage()}}" alt="Logo" class="avatar">
+        </div>
+    </div>
+</header>
+<div class="container">
+
+    <div th:if="${session.user != null}" class="sidebar">
+        <ul class="menu" style="text-align: left;">
+            <li><a th:href="@{/cart}">Giỏ hàng</a></li>
+            <li><a th:href="@{/order}">Đơn hàng</a></li>
+            <li><a th:href="@{/user/account}">Tài khoản</a></li>
+            <li><a th:href="@{/user/logout}">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <main>
+        <div class="product-detail">
+            <button onclick="window.history.back()" class="back-btn">&larr; Quay lại</button>
+
+            <div class="product-info">
+                <div class="product-image">
+                    <img th:src="@{${food.images}}" alt="Hình minh họa món ăn">
+                </div>
+                <div class="product-desc">
+                    <h1 th:text="${food.name}">BÁNH MÌ</h1>
+                    <p>Giá tiền: <span th:text="${food.price}">...</span></p>
+                    <p>Địa chỉ: <span th:text="${food.location}">...</span></p>
+                    <div class="quantity-control">
+                        <label for="quantity" th:text="${food.quantity}-1">Số lượng:</label>
+                        <button class="btn-minus">-</button>
+                        <input type="number" id="quantity" value="1" min="1">
+                        <button class="btn-plus">+</button>
+                    </div>
+
+                    <div th:if="${session.user?.role != 'Admin'}" class="action-buttons">
+                        <button th:attr="data-id=${food.id}, data-name=${food.name}, data-sessionId=${session.user != null ? session.user.id : ''}" data-quantity="1" class="add-to-cart-btn">Thêm vào giỏ hàng</button>
+                        <form th:action="@{/order}" method="post">
+                            <input type="hidden" name="listCartItemId" th:value="${null}"/>
+                            <input type="hidden" name="foodId" th:value="${food.id}"/>
+                            <input type="hidden" name="quantity" id="hiddenQuantity"/> <!-- Mặc định là 1 -->
+                            <button type="submit" class="buy-now" style="text-align: left;">Mua Ngay</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-details">
+                <table>
+                    <tr>
+                        <th>CHI TIẾT SẢN PHẨM</th>
+                        <th>MÔ TẢ SẢN PHẨM</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>Thương hiệu: <span th:text="${food.brandName}"></span></p>
+                            <p>Địa chỉ: <span th:text="${food.location}"></span></p>
+                            <p>Số lượng còn: <span th:text="${food.quantity}"></span></p>
+                        </td>
+                        <td>Mô tả chi tiết về sản phẩm: <span th:text="${food.description}"></span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/assets/js/MinusPlusFood.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const quantityInput = document.getElementById('quantity');
+        const orderForm = document.querySelector('form'); // Get the form element
+        const hiddenQuantity = document.getElementById('hiddenQuantity');
+
+        // Ensure the quantity is valid before submitting the form
+        orderForm.addEventListener('submit', function (event) {
+            let quantityValue = quantityInput.value;
+
+            // Convert to integer using parseInt, and check if the value is a valid number
+            let quantityInt = parseInt(quantityValue, 10);
+
+            // If the value is not a valid number or is less than 1, set it to 1
+            if (isNaN(quantityInt) || quantityInt <= 0) {
+                quantityInt = 1; // Default to 1 if invalid
+            }
+
+            // Set the hidden input field to the valid quantity
+            hiddenQuantity.value = quantityInt;
+        });
+
+        // Ensure quantity is updated when changed
+        quantityInput.addEventListener('change', function () {
+            let quantityValue = quantityInput.value;
+            let quantityInt = parseInt(quantityValue, 10);
+
+            // If invalid, default to 1
+            if (isNaN(quantityInt) || quantityInt <= 0) {
+                quantityInput.value = 1; // Update the input field with default value
+            }
+        });
+    });
+
+</script>
+<script th:src="@{/assets/js/AddToCart.js}"></script>
+
+</body>
+</html>

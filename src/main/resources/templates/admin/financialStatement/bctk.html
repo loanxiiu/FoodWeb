@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:insert="/admin/fragments/head :: head(~{::link},~{::title})">
+    <title>Báo Cáo Thống Kê</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+</head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    /* Tổng quát */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+    }
+
+    /* Container */
+    .container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ff9f32;
+        border-bottom: 1px solid #ccc;
+        height: 60px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo img.avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    .logo span {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .menu {
+        width: 100%;
+        text-align: right;
+    }
+
+    .menu a {
+        margin-left: 20px;
+        text-decoration: none;
+        color: #007BFF;
+        font-size: 14px;
+    }
+
+    .menu a:hover {
+        text-decoration: underline;
+    }
+
+    nav {
+        display: block;
+        unicode-bidi: isolate;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+        background-color: #fff;
+        border-right: 1px solid #ddd;
+        padding: 20px 10px;
+        text-align: left;
+    }
+
+    .sidebar .logo {
+        text-align: center;
+    }
+
+    .sidebar .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sidebar ul li {
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .sidebar ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    .sidebar ul li a:hover {
+        color: #007bff;
+    }
+
+    /* Main Content */
+    .main-content {
+        flex-grow: 1;
+        padding: 20px;
+    }
+
+    .topbar {
+        display: flex;
+        justify-content: flex-end;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 0;
+    }
+
+    .topbar-links a {
+        margin-left: 15px;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .topbar-links a:hover {
+        text-decoration: underline;
+    }
+
+    /* Content Section */
+    .stats {
+        margin-top: 20px;
+    }
+
+    .stats h2 {
+        margin-bottom: 20px;
+    }
+
+    .stats-cards {
+        display: flex;
+        gap: 20px;
+    }
+
+    .card {
+        flex: 1;
+        background-color: #fff;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .card p {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    .card .value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card .icon {
+        font-size: 24px;
+    }
+
+    /* Stats Table */
+    .product-stats {
+        margin-top: 40px;
+    }
+
+    .stats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .stats-table th,
+    .stats-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .stats-table th {
+        background-color: #f4f4f4;
+        font-weight: bold;
+    }
+
+    .stats-table tr:nth-child(odd) {
+        background-color: #f9f9f9;
+    }
+
+    .stats-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+</style>
+<body>
+<header th:replace="/admin/fragments/header :: header"></header>
+<div class="container">
+    <!-- Sidebar -->
+    <div th:replace="/admin/fragments/sidebar :: div"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Trang Báo Cáo Doanh Thu</h2>
+
+        <div class="chart-container" style="width: 100%; height: 500px;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="chart-options">
+            <button onclick="showChart('daily')">Doanh Thu Theo Ngày</button>
+            <button onclick="showChart('monthly')">Doanh Thu Theo Tháng</button>
+            <button onclick="showChart('yearly')">Doanh Thu Theo Năm</button>
+        </div>
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    let chartInstance = null;
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+
+    // Function to show the chart
+    function showChart(period) {
+        // Clear previous chart
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        let url = '';
+        let labels = [];
+        let data = [];
+
+        // Set API URL based on the period
+        switch (period) {
+            case 'daily':
+                url = '/food_web/admin/revenue/daily/current-month'; // API for daily revenue
+                break;
+            case 'monthly':
+                url = '/food_web/admin/revenue/month/current-year'; // API for monthly revenue
+                break;
+            case 'yearly':
+                url = '/food_web/admin/revenue/fiveYear'; // API for 5 years revenue
+                break;
+        }
+
+        // AJAX call to fetch data
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                // The response should contain the revenue data
+                if (period === 'daily') {
+                    labels = getDaysInMonth(currentYear, currentMonth);
+                    data = response;
+                } else if (period === 'monthly') {
+                    labels = months;
+                    data = response;
+                } else if (period === 'yearly') {
+                    labels = [currentYear - 4, currentYear - 3, currentYear - 2, currentYear - 1, currentYear];
+                    data = response;
+                }
+
+                // Format the data to avoid scientific notation
+                data = formatRevenueData(data);
+                console.log(data)
+
+                // Create the new chart
+                const chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Doanh Thu',
+                            data: data,
+                            borderColor: '#FF5722',
+                            backgroundColor: 'rgba(255, 87, 34, 0.2)',
+                            borderWidth: 2,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                enabled: true,
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true
+                            },
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                chartInstance = new Chart(ctx, chartConfig);
+            },
+            error: function(error) {
+                console.error("Error fetching revenue data:", error);
+            }
+        });
+    }
+
+    // Function to get the days in a given month
+    function getDaysInMonth(year, month) {
+        const days = [];
+        const date = new Date(year, month - 1, 2); // Start at the first day of the month
+        const lastDateOfMonth = new Date(year, month, 1); // Get the last day of the month
+
+        // Loop through the days of the month
+        while (date <= lastDateOfMonth) {
+            days.push(new Date(date).toISOString().split('T')[0]); // Format each date as YYYY-MM-DD
+            date.setDate(date.getDate() + 1); // Move to the next day
+        }
+
+        return days;
+    }
+
+    // Format revenue data to avoid scientific notation
+    function formatRevenueData(data) {
+        return data.map(item => {
+            return parseFloat(item).toFixed(2);  // Adjust the number of decimal places as needed
+        });
+    }
+
+    // Load the default chart (daily)
+    window.onload = function () {
+        showChart('daily'); // Default to daily chart
+    };
+</script>
+
+</body>
+</html>

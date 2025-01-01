@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:insert="/user/fragments/head :: head(~{::link},~{::title})">
+    <title>Quản Lý Tài Khoản</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+</head>
+<style>/* Tổng quát */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Container chính */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ff9f32;
+    border-bottom: 1px solid #ccc;
+    height: 60px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu {
+    width: 100%;
+}
+
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 14px;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+nav {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.logo {
+    text-align: center;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.menu {
+    width: 100%;
+    text-align: right;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu ul li {
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.menu ul li a:hover {
+    background-color: #f0f0f0;
+    color: #000;
+}
+
+/* Main content */
+.main-content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.topbar-links a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #333;
+}
+
+.topbar-links a:hover {
+    text-decoration: underline;
+}
+
+/* Content */
+.content {
+    margin-top: 20px;
+}
+
+.content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.account-form .form-group {
+    margin-bottom: 15px;
+}
+
+.account-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.account-form input[type="text"],
+.account-form input[type="email"],
+.account-form select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-select select {
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-edit {
+    background-color: #f0ad4e;
+    color: #fff;
+}
+
+.btn-save {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.btn-edit:hover,
+.btn-save:hover {
+    opacity: 0.8;
+}
+</style>
+<body>
+<header th:replace="/admin/fragments/header :: header"></header>
+<div class="container">
+    <!-- Thanh điều hướng -->
+    <div th:replace="/admin/fragments/sidebar :: div"></div>
+
+    <!-- Nội dung chính -->
+    <main class="main-content">
+
+        <section class="content">
+            <h1>Tài Khoản Của Tôi</h1>
+            <form th:action="@{/admmin/account/update}" method="post" enctype="multipart/form-data" class="account-form">
+                <input type="hidden" name="id" th:value="${session.user.id}">
+                <div class="form-group">
+                    <label for="productImage" class="form-label">Tải lên ảnh</label>
+                    <img id="imagePreview" th:src="@{${session.user.image}}" alt="Ảnh xem trước"
+                         style=" margin-top: 10px; max-width: 300px;">
+                    <input type="file" id="productImage" th:value="${session.user.image}" name="imageFile"
+                           class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="name">Tên đăng nhập</label>
+                    <input type="text" id="name" name="name" th:value="${session.user.name}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" th:value="${session.user.email}">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="text" id="phone" name="phone" th:value="${session.user.phone}">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Địa chỉ</label>
+                    <input type="text" id="address" name="address" th:value="${session.user.address}">
+                </div>
+                <div class="form-group">
+                    <label>Giới tính</label>
+                    <div class="radio-group">
+                        <input type="radio" id="male" name="gender" value="male">
+                        <label for="male">Nam</label>
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">Nữ</label>
+                        <input type="radio" id="other" name="gender" value="other">
+                        <label for="other">Khác</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Ngày sinh</label>
+                    <input type="date" id="dateOfBirth" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-save">Lưu</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('productImage');
+        const preview = document.getElementById('imagePreview');
+
+        fileInput.addEventListener('change', function () {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.style.display = "block";
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = "none";
+                preview.src = "";
+            }
+        });
+    });
+</script>
+</body>
+</html>

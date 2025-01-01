@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+<style>
+    /* Reset CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color:#ff9f32;
+    border-bottom: 1px solid #ccc;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.logo span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 14px;
+}
+
+.menu a.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Container */
+.container {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 20px;
+    max-width: 1200px;
+    width: 90%;
+    height: 90vh; /* Chiều cao toàn màn hình */
+    margin: 0 auto;
+}
+
+.left-section,
+.right-section {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.left-section {
+    flex: 1; /* Vẫn chiếm nhiều không gian hơn so với .right-section */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    height: 80vh;
+}
+
+.left-section .main-icon {
+    width: 500px;
+    height: 500px;
+    margin-bottom: 20px;
+}
+
+.left-section p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Right Section */
+.right-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input[type="text"],
+form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.form-options a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.form-options a:hover {
+    text-decoration: underline;
+}
+
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #777;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.social-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+    color: #fff;
+}
+
+.btn-google {
+    background-color: #db4437;
+    color: #fff;
+}
+
+</style>
+</head>
+<body>
+    <div class="header">
+        <a th:href="@{/}" style="text-decoration: none">
+            <div class="logo">
+                <img th:src="@{/assets/images/logo.png}" alt="User Icon">
+                <span>2022 FOOD</span>
+            </div>
+            <div class="menu">
+                <a th:href="@{/user/dangki}" class="active">Đăng kí</a>
+            </div>
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="left-section">
+            <img th:src="@{/assets/images/Screenshot 2024-11-26 211704.png}" alt="Food Icon" class="main-icon">
+            <p>Nền tảng đặt<br>đồ ăn nhanh chóng, tiện lợi</p>
+        </div>
+        <div class="right-section">
+            <h2>ĐĂNG NHẬP</h2>
+            <form th:action="@{/user/dangnhap}" method="post">
+                <input type="text" name="username" placeholder="Tên đăng nhập / SDT / Email" required>
+                <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                <span th:text="${error}" style="color: red; text-align: center"></span>
+                    <button class="btn-primary" type="submit">Đăng nhập</button>
+                <div class="form-options">
+                    <label>
+                        <input type="checkbox">
+                        Lưu thông tin đăng nhập
+                    </label>
+                    <a href="#">Quên mật khẩu?</a>
+                </div>
+                <div class="divider">Hoặc đăng nhập bằng tài khoản của bạn</div>
+                <div class="social-buttons">
+                    <button class="btn-facebook">Facebook</button>
+                    <button class="btn-google">Google</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

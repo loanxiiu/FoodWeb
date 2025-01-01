@@ -1,0 +1,13 @@
+@Service
+public class MessageService {
+    @Autowired
+    private MessageRepository messageRepository;
+
+    public void saveMessage(MessageEntity message) {
+        messageRepository.save(message);
+    }
+
+    public List<MessageEntity> getMessages(Long senderId, Long receiverId) {
+        return messageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
+    }
+}

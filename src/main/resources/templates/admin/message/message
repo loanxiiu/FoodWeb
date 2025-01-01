@@ -1,0 +1,10 @@
+public class Message {
+    private Long senderId;
+    private Long receiverId;
+    private String message;
+
+    // Constructors, getters, setters
+}
+
+
+^\s*//(?!cdn|www\.thymeleaf).*|(?<=\s)//.* clean comment

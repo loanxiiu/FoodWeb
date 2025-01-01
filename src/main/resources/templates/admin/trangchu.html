@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:insert="/admin/fragments/head :: head(~{::link},~{::title})">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+</head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<body style="margin: 0 400px 0 400px;">
+<!-- Header -->
+<header th:replace="/admin/fragments/header :: header"></header>
+
+<div class="container">
+
+    <div th:replace="/admin/fragments/sidebar :: div"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Trang Báo Cáo Doanh Thu</h2>
+
+        <div class="chart-container" style="width: 100%; height: 500px;">
+            <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="chart-options">
+            <button onclick="showChart('daily')">Doanh Thu Theo Ngày</button>
+            <button onclick="showChart('monthly')">Doanh Thu Theo Tháng</button>
+            <button onclick="showChart('yearly')">Doanh Thu Theo Năm</button>
+        </div>
+
+        <!-- Placeholder for revenue data -->
+        <div th:if="${revenueData}">
+            <p>Hiển thị báo cáo doanh thu theo {{ selectedPeriod }}.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let revenueData = {
+        daily: {
+            labels: ['2024-12-01', '2024-12-02', '2024-12-03'], // Example dates
+            data: [120, 150, 130] // Example revenue values
+        },
+        monthly: {
+            labels: ['Tháng 1', 'Tháng 2', 'Tháng 3'], // Example months
+            data: [1500, 2000, 2500] // Example revenue values
+        },
+        yearly: {
+            labels: ['2022', '2023', '2024'], // Example years
+            data: [18000, 22000, 24000] // Example revenue values
+        }
+    };
+
+    let currentChartType = 'daily'; // Default chart type
+    let chartInstance = null;
+
+    // Function to render the chart based on the selected period
+    function showChart(period) {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+
+        // Destroy the previous chart if it exists
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        const data = revenueData[period];
+        const chartConfig = {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Doanh Thu',
+                    data: data.data,
+                    borderColor: '#FF5722',
+                    backgroundColor: 'rgba(255, 87, 34, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        enabled: true,
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        chartInstance = new Chart(ctx, chartConfig);
+        currentChartType = period;
+    }
+
+    // Show the default chart on page load
+    window.onload = function() {
+        showChart(currentChartType);
+    };
+</script>
+</body>
+</html>

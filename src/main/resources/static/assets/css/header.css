@@ -1,0 +1,67 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ff9f32;
+    border-bottom: 1px solid #ccc;
+    height: 50px;
+    text-align: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+.menu {
+    width: 100%;
+    text-align: right;
+}
+
+.menu a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 14px;
+}
+/* Tên trang web */
+/*.web-title {*/
+/*    font-size: 36px; !* Kích thước chữ lớn *!*/
+/*    font-weight: bold; !* Chữ đậm *!*/
+/*    font-family: 'Poppins', Arial, sans-serif; !* Font hiện đại *!*/
+/*    color: #ff5722; !* Màu nổi bật *!*/
+/*    text-transform: uppercase; !* Chuyển đổi toàn bộ chữ thành in hoa *!*/
+/*    text-align: center; !* Căn giữa *!*/
+/*    margin: 20px 0; !* Khoảng cách trên và dưới *!*/
+/*    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); !* Hiệu ứng bóng chữ *!*/
+/*    letter-spacing: 2px; !* Khoảng cách giữa các ký tự *!*/
+/*}*/
+
+/*!* Hiệu ứng hover cho web title *!*/
+/*.web-title:hover {*/
+/*    color: #e64a19; !* Đổi màu khi hover *!*/
+/*    text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3); !* Tăng hiệu ứng bóng *!*/
+/*    transition: all 0.3s ease; !* Hiệu ứng chuyển đổi mượt *!*/
+/*}*/
+
+
+.menu a:hover {
+    text-decoration: underline;
+}
+nav {
+    display: block;
+    unicode-bidi: isolate;
+}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:insert="/user/fragments/head :: head(~{::link},~{::title})">
+    <title>Trang chủ</title>
+    <link rel="stylesheet" th:href="@{/assets/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/index.css}">
+</head>
+
+<body style="margin: 0 400px 0 400px;">
+
+<!-- Header -->
+<header th:replace="/user/fragments/header :: header"></header><!--<span id="cart-count">0</span>-->
+
+<div class="container">
+
+    <div th:if="${session.user != null}" class="sidebar">
+        <ul class="menu" style="text-align: left;">
+            <li><a th:href="@{/cart}">Giỏ hàng</a></li>
+            <li><a th:href="@{/order}">Đơn hàng</a></li>
+            <li><a th:href="@{/user/account}">Tài khoản</a>
+            <li><a th:href="@{/user/logout}">Đăng xuất</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="banner">
+            <img th:src="@{/assets/images/in-banner-quang-cao-do-an-7-1.jpg}" alt="Banner">
+        </div>
+
+        <div class="promotions">
+            <div class="promo">
+                <i class="icon">🍴</i>
+                <p>Giảm 50%</p>
+            </div>
+            <div class="promo">
+                <i class="icon">🍴</i>
+                <p>Freeship</p>
+            </div>
+            <div class="promo">
+                <i class="icon">🍴</i>
+                <p>Deal xịn</p>
+            </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap">
+            <div th:each="food: ${foods}" class="product-card">
+                <a th:href="@{/foods/{id}(id=${food.id})}" class="link-to-product">
+                    <div class="product-image">
+                        <img th:src="@{${food.images}}" alt="Bánh mì cô Hai"/>
+                        <div class="discount-badge">-26%</div>
+                    </div>
+                    <div class="product-info">
+                        <div class="tags">
+                            <span class="tag favorite">Yêu thích+</span>
+                            <span th:text="${food.name}" class="product-name">Bánh mì cô Hai</span>
+                        </div>
+                        <div class="promo-tags">
+                            <span>#ShopXuHuong</span>
+                        </div>
+                        <div th:text="${food.price}" class="
+                        ricep" style="color: black">₫14.900
+                        </div>
+                    </div>
+                </a>
+                <div class="add-to-cart ">
+                    <form th:action="@{/order}" method="post">
+                        <input type="hidden" name="listCartItemId" th:value="${null}"/>
+                        <input type="hidden" name="foodId" th:value="${food.id}"/>
+                        <input type="hidden" name="quantity" value="1"/> <!-- Mặc định là 1 -->
+                        <button type="submit" class="buy-now-btn" style="text-align: left; background-color: #0056b3">Mua Ngay</button>
+                    </form>
+<!--                    <button type="submit" th:attr="data-id=${food.id}"data-quantity="1" class="buy-now-btn" style="text-align: left;">Mua Ngay</button>-->
+                    <button th:attr="data-id=${food.id}, data-name=${food.name}, data-sessionId=${session.user != null ? session.user.id : ''}" data-quantity="1" class="add-to-cart-btn">🛒</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/assets/js/AddToCart.js}"></script>
+
+</body>
+</html>

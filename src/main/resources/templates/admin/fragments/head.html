@@ -1,0 +1,11 @@
+<head th:fragment="head(extraLinks, pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fontawesome.com/icons/user?f=classic&s=solid">
+    <link rel="stylesheet" th:href="@{/assets/css/header.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/container.css}">
+
+    <!-- Placeholder for additional CSS passed from the calling page -->
+    <th:block th:replace="${extraLinks}"></th:block>
+    <th:block th:replace="${pageTitle}"></th:block>
+</head>

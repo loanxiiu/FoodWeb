@@ -1,0 +1,55 @@
+/* Sidebar */
+.sidebar {
+    width: 20%; /* Chiều rộng sidebar */
+    height: 100vh; /* Chiều cao full màn hình */
+    background-color: #ffffff; /* Nền trắng */
+    padding: 20px;
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0; /* Đường viền bên phải nhẹ nhàng */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Đổ bóng để tạo chiều sâu */
+    font-family: Arial, sans-serif; /* Font dễ nhìn */
+}
+
+/* Logo */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center; /* Căn giữa logo */
+    color: #ff9f32; /* Màu nổi bật cho logo */
+    text-transform: uppercase; /* Chuyển thành chữ hoa */
+}
+
+/* Menu */
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    margin-bottom: 15px;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #555; /* Màu xám nhạt cho chữ */
+    font-size: 16px;
+    display: block;
+    padding: 10px 15px; /* Tạo khoảng cách trong item */
+    border-radius: 5px; /* Bo góc nhẹ cho từng mục */
+    transition: all 0.3s ease; /* Hiệu ứng hover mượt */
+}
+
+/* Hover effect */
+.menu li a:hover {
+    background-color: #ff9f32; /* Nền nổi bật khi hover */
+    color: #ffffff; /* Chữ trắng khi hover */
+}
+
+/* Active link */
+.menu li a.active {
+    background-color: #ff9f32; /* Nền của link đang được chọn */
+    color: #ffffff; /* Chữ trắng cho link active */
+    font-weight: bold; /* Chữ đậm cho link active */
+}

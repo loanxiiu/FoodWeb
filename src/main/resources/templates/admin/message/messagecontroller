@@ -1,0 +1,48 @@
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/send-message")
+public class MessageController {
+
+    @PostMapping
+    public ResponseEntity<String> sendMessage(@RequestBody Message message) {
+        // Lưu tin nhắn vào cơ sở dữ liệu hoặc xử lý logic gửi tin nhắn
+        // Ví dụ: Lưu tin nhắn vào cơ sở dữ liệu
+
+        System.out.println("Gửi tin nhắn từ " + message.getSenderId() + " đến " + message.getReceiverId());
+        System.out.println("Tin nhắn: " + message.getMessage());
+
+        // Trả lời thành công
+        return ResponseEntity.ok("Tin nhắn đã được gửi!");
+    }
+}
+
+
+
+
+
+@RestController
+@RequestMapping("/send-message")
+public class MessageController {
+
+    @Autowired
+    private MessageService messageService;
+
+    @PostMapping
+    public ResponseEntity<String> sendMessage(@RequestBody Message message) {
+        MessageEntity messageEntity = new MessageEntity();
+        messageEntity.setSenderId(message.getSenderId());
+        messageEntity.setReceiverId(message.getReceiverId());
+        messageEntity.setMessage(message.getMessage());
+
+        // Lưu tin nhắn vào cơ sở dữ liệu
+        messageService.saveMessage(messageEntity);
+
+        return ResponseEntity.ok("Tin nhắn đã được gửi!");
+    }
+
+    @GetMapping("/history")
+    public List<MessageEntity> getMessageHistory(@RequestParam Long senderId, @RequestParam Long receiverId) {
+        return messageService.getMessages(senderId, receiverId);
+    }
+}
