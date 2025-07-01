@@ -1,4 +1,4 @@
-# Food_Web2
+# Food_Web
 
 ## Overview
 Food_Web2 is a full-stack web application for online food ordering and delivery, built with Java, Spring Boot, Thymeleaf, and MySQL. The system supports both customer and admin roles, enabling users to browse food items, manage shopping carts, place orders, and make payments, while admins can manage products, brands, customers, orders, deliveries, and view financial/statistical reports.
